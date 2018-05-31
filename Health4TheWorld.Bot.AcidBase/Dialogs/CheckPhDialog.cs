@@ -12,7 +12,7 @@ namespace Health4TheWorld.Bot.AcidBase.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             //start of conversation
-            await context.SayAsync("Step 1: Evaluate if primary disorder is acidosis or alkalosis.\nIs pH above or below 7.4?");
+            await context.SayAsync("Step 1: (abctest) Evaluate if primary disorder is acidosis or alkalosis.\nIs pH above or below 7.4?");
 
             var message = context.MakeMessage();
             
