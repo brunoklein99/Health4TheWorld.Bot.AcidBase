@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
@@ -8,24 +9,33 @@ namespace Health4TheWorld.Bot.AcidBase.Dialogs
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        public Task StartAsync(IDialogContext context)
+        public async Task StartAsync(IDialogContext context)
         {
-            context.Wait(MessageReceivedAsync);
-
-            return Task.CompletedTask;
+            context.Wait(ProcessHelloMessage);
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        private async Task ProcessHelloMessage(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var activity = await result as Activity;
+            context.Call(new CheckPhDialog(), CheckPaCoHcoAsync);
+        }
 
-            // Calculate something for us to return
-            int length = (activity.Text ?? string.Empty).Length;
+        private async Task CheckPaCoHcoAsync(IDialogContext context, IAwaitable<bool> awaitable)
+        {
+            var result = await awaitable;
 
-            // Return our reply to the user
-            await context.PostAsync($"You sent {activity.Text} which was {length} characters");
+            if (result)
+            {
+                context.Call(new CheckPaCoHcoDialog(), CheckAnionGapAsync);
+            }
+            else
+            {
+                //
+            }
+        }
 
-            context.Wait(MessageReceivedAsync);
+        private Task CheckAnionGapAsync(IDialogContext context, IAwaitable<bool> result)
+        {
+            throw new NotImplementedException();
         }
     }
 }
